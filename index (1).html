@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Daily Pass · 하루 20문장 영어</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Nanum+Myeongjo:wght@700;800&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EEF0F4; --paper:#FFFFFF; --ink:#141C2F; --soft:#6A7085; --line:#E0E3EA;
+  --gold:#A8834A; --gold2:#D8BC85; --pass:#141C2F; --passInk:#F3EEE4; --chip:#F5F6F9;
+  --ok:#2F5D50; --no:#9B3B3B;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0C1120; --paper:#151C2E; --ink:#ECEEF4; --soft:#9CA3B8; --line:#262E45;
+    --gold:#CBA968; --gold2:#E6CE9C; --pass:#1C2540; --passInk:#F3EEE4; --chip:#1B2338;
+    --ok:#5FA58F; --no:#D07272;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0C1120; --paper:#151C2E; --ink:#ECEEF4; --soft:#9CA3B8; --line:#262E45;
+  --gold:#CBA968; --gold2:#E6CE9C; --pass:#1C2540; --passInk:#F3EEE4; --chip:#1B2338;
+  --ok:#5FA58F; --no:#D07272;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans KR","Apple SD Gothic Neo",system-ui,sans-serif;font-weight:400;font-size:15.5px;line-height:1.65}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.wrap{max-width:600px;margin:0 auto;padding:22px 18px 70px}
+.en{font-family:"Cormorant Garamond",Georgia,"Times New Roman",serif}
+.ko-serif{font-family:"Nanum Myeongjo","AppleMyungjo",serif}
+
+.top{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:18px}
+.brand{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;font-size:1.7rem;letter-spacing:.01em}
+.brand small{font-family:"Noto Sans KR",sans-serif;font-weight:300;font-size:.8rem;color:var(--soft);margin-left:8px;letter-spacing:0}
+.stats{display:flex;gap:16px;font-size:.85rem;color:var(--soft)}
+.stats b{font-family:"Cormorant Garamond",serif;font-size:1.35rem;font-weight:600;color:var(--ink);margin-left:4px}
+
+/* daily cheer */
+.cheer{display:flex;align-items:flex-start;gap:12px;margin:0 2px 18px;padding-left:14px;border-left:2px solid var(--gold)}
+.cheer .ctext{flex:1;min-width:0}
+.cheer .cen{font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;font-weight:600;font-size:1.35rem;line-height:1.3}
+.cheer .cko{font-size:.84rem;color:var(--soft);margin-top:2px}
+.cheer .csay{flex:none;width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:var(--paper);color:var(--gold);display:grid;place-items:center;margin-top:2px}
+.cheer .csay svg{width:14px;height:14px}
+
+/* boarding pass */
+.pass{position:relative;background:var(--pass);color:var(--passInk);border-radius:20px;overflow:hidden;display:grid;grid-template-columns:1fr 104px}
+.pass::before{content:"";position:absolute;inset:8px;border:1px solid color-mix(in srgb,var(--gold2) 45%,transparent);border-radius:14px;pointer-events:none}
+.pmain{padding:24px 22px 20px 26px;min-width:0}
+.pmeta{font-size:.78rem;color:color-mix(in srgb,var(--passInk) 65%,transparent);letter-spacing:.02em}
+.pmeta .kind{color:var(--gold2)}
+.pass h1{font-family:"Nanum Myeongjo",serif;font-weight:800;font-size:2rem;line-height:1.25;margin:10px 0 2px}
+.pass .pen{font-family:"Cormorant Garamond",serif;font-style:italic;font-size:1.25rem;color:var(--gold2)}
+.segs{display:grid;grid-template-columns:repeat(20,1fr);gap:3px;margin-top:18px}
+.segs i{height:4px;border-radius:2px;background:color-mix(in srgb,var(--passInk) 18%,transparent);transition:background .3s}
+.segs i.on{background:var(--gold2)}
+.pcount{margin-top:8px;font-size:.8rem;color:color-mix(in srgb,var(--passInk) 65%,transparent)}
+.pstub{border-left:1px dashed color-mix(in srgb,var(--gold2) 55%,transparent);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:16px 6px;position:relative}
+.pstub::before,.pstub::after{content:"";position:absolute;left:-10px;width:20px;height:20px;border-radius:50%;background:var(--bg)}
+.pstub::before{top:-10px}.pstub::after{bottom:-10px}
+.pstub .mon{font-size:.75rem;color:color-mix(in srgb,var(--passInk) 60%,transparent)}
+.pstub .dd{font-family:"Cormorant Garamond",serif;font-weight:600;font-size:2.6rem;line-height:1;color:var(--gold2)}
+.pstub .wd{font-size:.75rem;color:color-mix(in srgb,var(--passInk) 60%,transparent)}
+.seal{position:absolute;right:118px;bottom:16px;width:84px;height:84px;border-radius:50%;display:grid;place-items:center;
+  background:radial-gradient(circle at 35% 30%,#E9D29E,#B08A4C 60%,#8C6A33);color:#2A1E0B;
+  box-shadow:0 0 0 3px color-mix(in srgb,#E9D29E 40%,transparent),inset 0 -3px 6px rgba(0,0,0,.25);
+  font-family:"Nanum Myeongjo",serif;font-weight:800;font-size:.85rem;line-height:1.2;text-align:center;
+  transform:rotate(-12deg) scale(0);opacity:0;pointer-events:none}
+.seal::before{content:"";position:absolute;inset:6px;border-radius:50%;border:1px dashed rgba(42,30,11,.45)}
+.seal.show{opacity:1;transform:rotate(-12deg) scale(1)}
+.seal.press{animation:press .6s cubic-bezier(.2,1.5,.4,1)}
+@keyframes press{0%{transform:rotate(-40deg) scale(1.9);opacity:0}100%{transform:rotate(-12deg) scale(1);opacity:1}}
+
+.nav{display:flex;justify-content:space-between;align-items:center;margin:14px 2px 22px}
+.nav button{background:none;border:none;padding:6px 4px;color:var(--soft);font-size:.9rem}
+.nav button:disabled{opacity:.3;cursor:default}
+.nav .today{border:1px solid var(--line);border-radius:999px;padding:4px 16px;color:var(--ink);background:var(--paper)}
+
+.tabs{display:flex;gap:26px;border-bottom:1px solid var(--line);margin-bottom:16px}
+.tabs button{background:none;border:none;padding:10px 0;margin-bottom:-1px;font-family:"Nanum Myeongjo",serif;font-weight:700;font-size:1.05rem;color:var(--soft);border-bottom:2px solid transparent}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--gold)}
+
+.toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-size:.85rem;color:var(--soft)}
+.switch{display:flex;align-items:center;gap:8px;background:none;border:none;color:var(--soft);padding:4px 0}
+.switch .knob{width:34px;height:20px;border-radius:999px;border:1px solid var(--line);background:var(--chip);position:relative;transition:background .2s}
+.switch .knob::after{content:"";position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:var(--soft);transition:transform .2s,background .2s}
+.switch[aria-pressed="true"] .knob{background:var(--gold);border-color:var(--gold)}
+.switch[aria-pressed="true"] .knob::after{transform:translateX(14px);background:#fff}
+
+.list{display:flex;flex-direction:column}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:18px 18px 14px;margin-bottom:10px;transition:border-color .25s}
+.card.done{border-color:color-mix(in srgb,var(--gold) 60%,var(--line))}
+.row{display:flex;gap:14px}
+.num{flex:none;width:26px;font-family:"Cormorant Garamond",serif;font-weight:600;font-size:1.25rem;color:var(--gold);line-height:1.35}
+.phrase{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;font-size:1.5rem;line-height:1.25;margin:0}
+.pron{font-size:.83rem;color:var(--soft);margin-top:4px;font-weight:300}
+.mean{margin-top:8px;font-size:1rem;position:relative}
+.mean.hidden span{filter:blur(7px);user-select:none}
+.mean.hidden::after{content:"탭해서 뜻 보기";position:absolute;left:0;top:1px;font-size:.8rem;color:var(--soft);background:var(--chip);border:1px solid var(--line);border-radius:6px;padding:0 8px}
+.tip{margin-top:8px;font-size:.84rem;color:var(--soft);border-left:2px solid var(--gold2);padding:1px 0 1px 10px}
+.acts{display:flex;gap:6px;margin-top:14px;flex-wrap:wrap;padding-left:40px}
+.btn{border:1px solid var(--line);background:transparent;border-radius:999px;padding:5px 14px;font-size:.84rem;display:inline-flex;align-items:center;gap:6px}
+.btn.play{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.btn.got{margin-left:auto}
+.btn.got[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:#fff}
+.btn svg{width:13px;height:13px}
+
+.quiz{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:24px 20px}
+.qhead{display:flex;justify-content:space-between;font-size:.82rem;color:var(--soft)}
+.qbar{height:3px;background:var(--line);margin:10px 0 22px}
+.qbar b{display:block;height:100%;background:var(--gold);transition:width .3s}
+.qask{font-size:.85rem;color:var(--soft)}
+.qmean{font-family:"Nanum Myeongjo",serif;font-weight:800;font-size:1.5rem;line-height:1.4;margin:6px 0 18px}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{text-align:left;border:1px solid var(--line);background:transparent;border-radius:12px;padding:11px 14px;font-family:"Cormorant Garamond",serif;font-weight:600;font-size:1.2rem;line-height:1.3}
+.opt.right{background:var(--ok);border-color:var(--ok);color:#fff}
+.opt.wrong{background:var(--no);border-color:var(--no);color:#fff}
+.opt:disabled{cursor:default}
+.qnext{margin-top:16px;width:100%;border:none;border-radius:12px;padding:12px;background:var(--ink);color:var(--paper);font-family:"Nanum Myeongjo",serif;font-weight:700;font-size:1rem}
+.result{text-align:center}
+.result .big{font-family:"Cormorant Garamond",serif;font-weight:600;font-size:4rem;line-height:1;color:var(--gold)}
+.result p{margin:10px 0 18px;color:var(--soft)}
+
+.banner{display:none;margin-top:8px;border:1px solid var(--gold);border-radius:16px;padding:16px;text-align:center;font-family:"Nanum Myeongjo",serif;font-weight:700}
+.banner.show{display:block}
+.warn{display:none;margin-bottom:12px;font-size:.84rem;color:var(--soft)}
+/* header guide button */
+.hright{display:flex;align-items:center;gap:14px}
+.help{width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:var(--paper);font-family:"Cormorant Garamond",serif;font-weight:600;font-size:1.15rem;line-height:1;display:grid;place-items:center;color:var(--gold)}
+
+/* play all */
+.tools{display:flex;align-items:center;gap:14px}
+.playall{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--gold);color:var(--gold);background:transparent;border-radius:999px;padding:4px 13px;font-size:.84rem}
+.playall.on{background:var(--gold);color:#fff}
+.playall svg,.btn svg{width:13px;height:13px;flex:none}
+.btn.speaking{background:var(--gold);border-color:var(--gold);color:#fff;opacity:1}
+.card.current{border-color:var(--gold);box-shadow:0 0 0 3px color-mix(in srgb,var(--gold) 18%,transparent)}
+
+/* guide modal */
+.overlay{position:fixed;inset:0;background:rgba(8,12,24,.55);display:none;align-items:flex-end;justify-content:center;z-index:50;padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+.overlay.open{display:flex}
+@media (min-width:640px){.overlay{align-items:center}}
+.sheet{background:var(--paper);color:var(--ink);width:100%;max-width:520px;max-height:86vh;overflow:auto;border-radius:22px;border:1px solid var(--line)}
+.shead{background:var(--pass);color:var(--passInk);padding:24px 24px 20px;position:relative}
+.shead .k{font-family:"Cormorant Garamond",serif;font-style:italic;color:var(--gold2);font-size:1.15rem}
+.shead h2{font-family:"Nanum Myeongjo",serif;font-weight:800;font-size:1.6rem;margin:4px 0 0}
+.close{position:absolute;right:16px;top:16px;width:34px;height:34px;border-radius:50%;border:1px solid color-mix(in srgb,var(--gold2) 50%,transparent);background:transparent;color:var(--passInk);font-size:1.1rem;line-height:1}
+.sbody{padding:10px 24px 24px}
+.gstep{display:flex;gap:16px;padding:14px 0;border-bottom:1px solid var(--line)}
+.gstep .gn{font-family:"Cormorant Garamond",serif;font-style:italic;font-weight:600;font-size:1.7rem;color:var(--gold);line-height:1.1;width:34px;flex:none}
+.gstep b{display:block;font-family:"Nanum Myeongjo",serif;font-weight:700;font-size:1.05rem}
+.gstep span{color:var(--soft);font-size:.88rem}
+.gtip{margin-top:16px;font-size:.85rem;color:var(--soft);border-left:2px solid var(--gold2);padding-left:12px}
+.gstart{margin-top:18px;width:100%;border:none;border-radius:12px;padding:12px;background:var(--ink);color:var(--paper);font-family:"Nanum Myeongjo",serif;font-weight:700;font-size:1rem}
+
+/* quiz reward */
+.reward{position:fixed;left:50%;top:42%;z-index:60;pointer-events:none;transform:translate(-50%,-50%);text-align:center;opacity:0;visibility:hidden}
+.reward.pop{visibility:visible}
+.reward .remo{font-size:5.2rem;line-height:1}
+.reward .rtxt{margin-top:6px;display:inline-block;background:var(--pass);color:var(--gold2);border-radius:999px;padding:6px 18px;font-family:"Nanum Myeongjo",serif;font-weight:800;font-size:1.05rem;white-space:nowrap}
+.reward.pop{animation:rewardPop 1.25s ease forwards}
+.reward.pop .remo{animation:emoBounce 1.25s cubic-bezier(.2,1.6,.4,1) forwards}
+@keyframes rewardPop{0%{opacity:0;transform:translate(-50%,-50%)}12%{opacity:1}70%{opacity:1;transform:translate(-50%,-50%)}100%{opacity:0;transform:translate(-50%,-75%)}}
+@keyframes emoBounce{0%{transform:scale(.2) rotate(-20deg)}30%{transform:scale(1.25) rotate(8deg)}50%{transform:scale(1) rotate(0)}100%{transform:scale(1)}}
+.spark{position:absolute;left:50%;top:40px;font-size:1.6rem;opacity:0}
+.reward.pop .spark{animation:spark 1s ease-out forwards}
+@keyframes spark{0%{opacity:1;transform:translate(-50%,-50%) scale(.4)}100%{opacity:0;transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(1)}}
+@media (prefers-reduced-motion:reduce){.reward.pop{opacity:1}.reward.pop .spark{display:none}}
+
+.foot{margin-top:28px;text-align:center;font-size:.78rem;color:var(--soft)}
+@media (prefers-reduced-motion:reduce){*:not(.reward){animation:none!important;transition:none!important}}
+@media (max-width:400px){
+  .pass{grid-template-columns:1fr 82px}.pass h1{font-size:1.65rem}.pstub .dd{font-size:2.1rem}
+  .seal{right:94px;width:70px;height:70px;font-size:.75rem}.phrase{font-size:1.35rem}.acts{padding-left:0}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">Daily Pass<small>하루 20문장</small></div>
+    <div class="hright">
+      <div class="stats"><span>연속<b id="streak">0</b>일</span><span>인장<b id="stamps">0</b>개</span></div>
+      <button class="help" id="openGuide" aria-label="사용법 보기" title="사용법">?</button>
+    </div>
+  </header>
+
+  <section class="cheer" aria-label="오늘의 응원">
+    <div class="ctext"><div class="cen" lang="en" id="cheerEn"></div><div class="cko" id="cheerKo"></div></div>
+    <button class="csay" id="cheerSay" aria-label="응원 문장 듣기"></button>
+  </section>
+
+  <section class="pass" aria-live="polite">
+    <div class="pmain">
+      <div class="pmeta"><span class="kind" id="kind">Travel</span> · <span id="dayLabel">오늘의 주제</span></div>
+      <h1 id="topicKo"></h1>
+      <div class="pen" id="topicEn"></div>
+      <div class="segs" id="segs" aria-hidden="true"></div>
+      <div class="pcount" id="pcount"></div>
+    </div>
+    <div class="pstub"><span class="mon" id="mon"></span><span class="dd" id="dd"></span><span class="wd" id="wd"></span></div>
+    <div class="seal" id="seal">오늘의<br>완주</div>
+  </section>
+
+  <div class="nav">
+    <button id="prev">‹ 이전 날</button>
+    <button id="goToday" class="today">오늘로</button>
+    <button id="next">다음 날 ›</button>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button role="tab" id="tabLearn" aria-selected="true">표현 익히기</button>
+    <button role="tab" id="tabQuiz" aria-selected="false">퀴즈</button>
+  </div>
+
+  <div class="warn" id="warn">이 브라우저는 음성 재생을 지원하지 않아요. 한글 발음 표기로 연습해 보세요.</div>
+
+  <main id="learn">
+    <div class="toolbar">
+      <span id="countText"></span>
+      <div class="tools">
+        <button class="playall" id="playAll" aria-pressed="false"></button>
+        <button class="switch" id="hideToggle" aria-pressed="false"><span>뜻 가리기</span><span class="knob"></span></button>
+      </div>
+    </div>
+    <div class="list" id="list"></div>
+    <div class="banner" id="banner">20개를 모두 외웠어요. 오늘의 인장을 받았습니다. 퀴즈로 마무리해 보세요.</div>
+  </main>
+  <main id="quiz" hidden></main>
+
+  <div class="overlay" id="guide" role="dialog" aria-modal="true" aria-labelledby="guideTitle">
+    <div class="sheet">
+      <div class="shead">
+        <div class="k">Daily Pass</div>
+        <h2 id="guideTitle">사용법</h2>
+        <button class="close" id="closeGuide" aria-label="닫기">✕</button>
+      </div>
+      <div class="sbody">
+        <div class="gstep"><span class="gn">01</span><div><b>표현 익히기</b><span>[듣기]로 발음을 듣고, 다시 누르면 멈춰요. [천천히]는 느린 속도예요. 익힌 표현은 [외웠어요]를 눌러 체크해요.</span></div></div>
+        <div class="gstep"><span class="gn">02</span><div><b>전체 듣기</b><span>20개 표현을 순서대로 이어 들어요. 재생 중에 [정지]를 누르면 바로 멈춰요.</span></div></div>
+        <div class="gstep"><span class="gn">03</span><div><b>퀴즈로 복습</b><span>뜻을 보고 알맞은 영어를 골라요. 10문제를 풀면 틀린 표현만 다시 보여줘요.</span></div></div>
+        <div class="gstep"><span class="gn">04</span><div><b>매일 새 주제</b><span>여행과 일상 주제가 하루씩 번갈아 열려요. ‹ 이전 날 · 다음 날 ›로 다른 날도 학습할 수 있어요.</span></div></div>
+        <div class="gstep"><span class="gn">05</span><div><b>기록 쌓기</b><span>20개를 모두 외우면 금색 인장을 받아요. 매일 완주하면 연속 일수가 늘어나요.</span></div></div>
+        <p class="gtip">학습 기록은 이 기기의 브라우저에만 저장돼요. 소리가 나오지 않으면 카카오톡 인앱 브라우저 대신 Safari나 Chrome으로 열어 주세요. 이 안내는 오른쪽 위 ? 버튼으로 언제든 다시 볼 수 있어요.</p>
+        <button class="gstart" id="startBtn">학습 시작하기</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="reward" id="reward" aria-live="polite"><div class="remo" id="remo"></div><div class="rtxt" id="rtxt"></div></div>
+
+  <p class="foot">매일 자정에 새 주제가 열립니다 · 여행과 일상 주제가 번갈아 나와요</p>
+</div>
+
+<script>
+const T=[
+{c:"t",ko:"공항에서",en:"At the Airport",p:[
+["I'd like to check in for my flight to London.","런던행 비행기 체크인하려고요.","아이드 라익 투 체킨 포 마이 플라잇 투 런던","for my flight to + 도시: 어느 편인지 한 번에 전달돼요."],
+["Could I get an aisle seat, if possible?","가능하면 통로 쪽 자리로 주실 수 있나요?","쿠다이 겟 언 아일 씻, 이프 파서블?","aisle의 s는 소리 나지 않아요. 창가는 window seat."],
+["What's the baggage allowance for this ticket?","이 항공권은 수하물 허용량이 어떻게 되나요?","왓츠 더 배기쥐 얼라우언스 포 디스 티킷?","allowance = 허용량"],
+["Is there a fee for overweight bags?","무게 초과 가방은 요금이 있나요?","이즈 데어 어 피 포 오버웨잇 백즈?",""],
+["Can I carry this on, or does it need to be checked?","이거 들고 타도 되나요, 아니면 부쳐야 하나요?","캔 아이 캐리 디스 온, 오어 더즈 잇 니드 투 비 첵트?","carry on = 기내 반입 / check = 수하물로 부치다"],
+["Is my bag checked through to my final destination?","제 짐이 최종 목적지까지 바로 가나요?","이즈 마이 백 첵트 쓰루 투 마이 파이널 데스티네이션?","환승 여행이라면 꼭 확인해야 할 질문이에요."],
+["Which gate does my flight leave from?","제 비행기는 몇 번 게이트에서 출발해요?","위치 게잇 더즈 마이 플라잇 리브 프롬?",""],
+["Has boarding started yet?","탑승 시작했나요?","해즈 보딩 스타티드 옛?",""],
+["My flight's been delayed. Do you know how long?","비행기가 지연됐는데, 얼마나 걸릴지 아세요?","마이 플라잇츠 빈 딜레이드. 두 유 노우 하우 롱?",""],
+["I missed my connecting flight. Could you rebook me?","환승편을 놓쳤어요. 다시 예약해 주실 수 있나요?","아이 미스트 마이 커넥팅 플라잇. 쿠쥬 리북 미?","rebook = 다른 편으로 재예약하다"],
+["Is there a later flight I could get on?","탈 수 있는 더 늦은 비행기가 있을까요?","이즈 데어 어 레이러 플라잇 아이 쿳 겟 온?",""],
+["Where do I go through security?","보안 검색은 어디서 받아요?","웨어 두 아이 고 쓰루 씨큐리티?",""],
+["Do I need to take my laptop out?","노트북 꺼내야 하나요?","두 아이 니드 투 테익 마이 랩탑 아웃?",""],
+["How long does it take to get to the gate?","게이트까지 얼마나 걸려요?","하우 롱 더즈 잇 테익 투 겟 투 더 게잇?",""],
+["My bag didn't come out. Where do I report it?","제 가방이 안 나왔어요. 어디에 신고하나요?","마이 백 디든트 컴 아웃. 웨어 두 아이 리포트 잇?",""],
+["My suitcase was damaged during the flight.","비행 중에 캐리어가 파손됐어요.","마이 숫케이스 워즈 대미쥐드 듀링 더 플라잇","캐리어는 영어로 suitcase예요."],
+["Is there a lounge I can use?","이용할 수 있는 라운지가 있나요?","이즈 데어 어 라운쥐 아이 캔 유즈?",""],
+["Could you print my boarding pass?","탑승권 출력해 주실 수 있나요?","쿠쥬 프린트 마이 보딩 패스?",""],
+["Is this the line for international departures?","여기가 국제선 출국 줄인가요?","이즈 디스 더 라인 포 인터내셔널 디파쳐스?","영국에서는 줄을 queue [큐]라고 해요."],
+["I'd like to upgrade my seat, if that's possible.","가능하다면 좌석을 업그레이드하고 싶어요.","아이드 라익 투 업그레이드 마이 씻, 이프 댓츠 파서블",""]]},
+{c:"d",ko:"안부와 스몰토크",en:"Small Talk",p:[
+["How's everything going with you?","요즘 다 잘 돼 가?","하우즈 에브리띵 고잉 위드 유?",""],
+["What have you been up to lately?","요즘 뭐 하고 지냈어?","왓 해뷰 빈 업 투 레잇리?","be up to = ~하며 지내다"],
+["It's been ages since we last talked!","마지막으로 얘기한 지 엄청 오래됐다!","잇츠 빈 에이쥐즈 씬스 위 라스트 톡트!","ages = 아주 오랜 시간"],
+["Things have been pretty hectic lately.","요즘 꽤 정신없었어.","띵즈 해브 빈 프리티 헥틱 레잇리","hectic = 정신없이 바쁜"],
+["I can't complain.","나쁘지 않아.","아이 캔트 컴플레인","불평할 게 없다 → 그럭저럭 잘 지내."],
+["Did you do anything fun over the weekend?","주말에 재밌는 거 했어?","디쥬 두 에니띵 펀 오버 더 위켄드?",""],
+["I've heard a lot of good things about you.","좋은 얘기 많이 들었어요.","아이브 허드 어 랏 오브 굿 띵즈 어바웃 유",""],
+["So, how do you two know each other?","두 분은 어떻게 아는 사이예요?","쏘, 하우 두 유 투 노우 이치 아더?","모임에서 대화를 트기 좋은 질문이에요."],
+["What do you like to do in your free time?","시간 날 때 뭐 하는 거 좋아해요?","왓 두 유 라익 투 두 인 유어 프리 타임?",""],
+["That sounds like a lot of fun.","진짜 재밌었겠다.","댓 싸운즈 라익 어 랏 오브 펀",""],
+["I've been meaning to ask you something.","너한테 뭐 좀 물어보려고 했었어.","아이브 빈 미닝 투 애스큐 썸띵","have been meaning to = 계속 ~하려고 했다"],
+["By the way, how's your family doing?","그나저나 가족들은 잘 지내?","바이 더 웨이, 하우즈 유어 패밀리 두잉?",""],
+["It was great running into you.","우연히 만나서 반가웠어.","잇 워즈 그레잇 러닝 인투 유","run into = 우연히 마주치다"],
+["We should get together sometime.","언제 한번 모이자.","위 슈드 겟 투게더 썸타임",""],
+["Let's keep in touch.","계속 연락하고 지내자.","렛츠 킵 인 터치",""],
+["I'd better get going.","이제 가 봐야겠다.","아이드 베러 겟 고잉","대화를 자연스럽게 마무리하는 표현."],
+["Tell her I said hi.","그녀한테 안부 전해 줘.","텔 허 아이 쎄드 하이",""],
+["Is it always this busy around here?","여기 원래 이렇게 붐벼요?","이즈 잇 올웨이즈 디스 비지 어라운드 히어?",""],
+["The weather's been crazy lately, hasn't it?","요즘 날씨 진짜 이상하지 않아요?","더 웨더즈 빈 크레이지 레잇리, 해즌트 잇?","날씨는 어디서나 통하는 스몰토크 주제예요."],
+["Catch you later!","나중에 봐!","캐취 유 레이러!",""]]},
+{c:"t",ko:"기내에서",en:"On the Plane",p:[
+["Excuse me, I think you're in my seat.","실례지만 제 자리에 앉으신 것 같아요.","익스큐즈 미, 아이 띵크 유어 인 마이 씻","I think를 붙이면 훨씬 부드러워요."],
+["Would you mind swapping seats with me?","저랑 자리 좀 바꿔 주실 수 있을까요?","우쥬 마인드 스와핑 씻츠 위드 미?","mind에 대한 대답 No = 괜찮아요."],
+["Is there room in the overhead bin?","머리 위 짐칸에 자리 있나요?","이즈 데어 룸 인 디 오버헤드 빈?",""],
+["Could you help me put this up?","이거 올리는 것 좀 도와주시겠어요?","쿠쥬 헬프 미 풋 디스 업?",""],
+["Do you mind if I put my seat back?","의자 좀 뒤로 젖혀도 될까요?","두 유 마인드 이프 아이 풋 마이 씻 백?",""],
+["Could I get a glass of water when you get a chance?","시간 되실 때 물 한 잔 주시겠어요?","쿠다이 겟 어 글래스 오브 워러 웬 유 겟 어 챈스?","when you get a chance = 여유 있을 때"],
+["What are the meal options?","식사 메뉴는 뭐가 있나요?","왓 아 더 밀 앱션즈?",""],
+["I'll have the chicken, please.","치킨으로 할게요.","아일 해브 더 치킨, 플리즈",""],
+["I ordered a vegetarian meal.","채식 기내식을 주문했어요.","아이 오더드 어 베쥐테리언 밀",""],
+["Could I get another blanket?","담요 하나 더 받을 수 있을까요?","쿠다이 겟 어나더 블랭킷?",""],
+["Do you have anything for motion sickness?","멀미약 있나요?","두 유 해브 에니띵 포 모션 씨크니스?",""],
+["How much longer until we land?","착륙까지 얼마나 더 남았나요?","하우 머취 롱거 언틸 위 랜드?",""],
+["Will we arrive on time?","제시간에 도착하나요?","윌 위 어라이브 온 타임?",""],
+["Excuse me, could I squeeze by?","실례합니다, 좀 지나가도 될까요?","익스큐즈 미, 쿠다이 스퀴즈 바이?","squeeze by = 좁은 틈을 비집고 지나가다"],
+["My screen isn't working.","제 화면이 안 나와요.","마이 스크린 이즌트 워킹",""],
+["Could you turn your music down a little?","음악 소리 좀 줄여 주실 수 있을까요?","쿠쥬 턴 유어 뮤직 다운 어 리를?",""],
+["Do I need to fill out a customs form?","세관 신고서를 작성해야 하나요?","두 아이 니드 투 필 아웃 어 커스텀즈 폼?","fill out = (서류를) 작성하다"],
+["Could I borrow a pen?","펜 좀 빌릴 수 있을까요?","쿠다이 바로우 어 펜?",""],
+["Is it okay to use the restroom now?","지금 화장실 가도 되나요?","이즈 잇 오케이 투 유즈 더 레스트룸 나우?",""],
+["Could you wake me up for the meal?","식사 나오면 깨워 주실래요?","쿠쥬 웨익 미 업 포 더 밀?",""]]},
+{c:"d",ko:"카페에서",en:"At the Café",p:[
+["Can I get a large iced latte with oat milk?","오트밀크로 아이스 라떼 라지 하나 주세요.","캔 아이 겟 어 라쥐 아이스트 라테이 위드 오웃 밀크?","사이즈 → 온도 → 메뉴 → 옵션 순서로 말하면 자연스러워요."],
+["Could you make it half-sweet?","당도를 절반으로 해 주실 수 있나요?","쿠쥬 메이킷 해프 스윗?",""],
+["Could I get an extra shot in that?","거기에 샷 추가해 주세요.","쿠다이 겟 언 엑스트라 샷 인 댓?",""],
+["Light ice, please.","얼음 적게 주세요.","라잇 아이스, 플리즈","얼음을 빼려면 No ice, please."],
+["Do you have decaf?","디카페인 있나요?","두 유 해브 디캐프?",""],
+["What's in the seasonal drink?","시즌 음료에는 뭐가 들어가요?","왓츠 인 더 씨즈널 드링크?",""],
+["For here, in a mug if possible.","먹고 갈게요, 가능하면 머그잔으로요.","포 히어, 인 어 머그 이프 파서블","가져갈 땐 To go."],
+["Could you warm up the muffin?","머핀 좀 데워 주실 수 있나요?","쿠쥬 웜 업 더 머핀?",""],
+["Sorry, I don't think this is what I ordered.","죄송한데, 이거 제가 주문한 게 아닌 것 같아요.","쏘리, 아이 돈 띵크 디스 이즈 왓 아이 오더드",""],
+["Can I get a refill?","리필 되나요?","캔 아이 겟 어 리필?",""],
+["Is anyone sitting here?","여기 누구 앉아 있나요?","이즈 에니원 씨팅 히어?",""],
+["Do you mind if I share this table?","이 테이블 같이 써도 될까요?","두 유 마인드 이프 아이 쉐어 디스 테이블?",""],
+["Is there an outlet I could use?","쓸 수 있는 콘센트 있나요?","이즈 데어 언 아웃렛 아이 쿳 유즈?","콘센트는 영어로 outlet이에요."],
+["What's the Wi-Fi password?","와이파이 비밀번호가 뭐예요?","왓츠 더 와이파이 패스워드?",""],
+["Could I get a sleeve for this?","컵 홀더 하나 주실래요?","쿠다이 겟 어 슬리브 포 디스?","종이컵 홀더는 sleeve라고 해요."],
+["Can I pay with my phone?","폰으로 결제돼요?","캔 아이 페이 위드 마이 폰?",""],
+["Can I get the receipt, please?","영수증 주시겠어요?","캔 아이 겟 더 리씻, 플리즈?","receipt의 p는 소리 나지 않아요."],
+["Keep the change.","잔돈은 가지세요.","킵 더 체인쥐",""],
+["This place has a really nice vibe.","여기 분위기 정말 좋네요.","디스 플레이스 해즈 어 리얼리 나이스 바이브","vibe = 분위기, 느낌"],
+["What would you recommend that's not too sweet?","너무 달지 않은 걸로 뭐 추천해 주시겠어요?","왓 우쥬 레커멘드 댓츠 낫 투 스윗?",""]]},
+{c:"t",ko:"입국 심사",en:"Immigration",p:[
+["I'm here for sightseeing.","관광하러 왔어요.","아임 히어 포 싸잇씨잉",""],
+["I'm here on business for a conference.","컨퍼런스 때문에 출장 왔어요.","아임 히어 온 비즈니스 포 어 칸퍼런스","on business = 업무차"],
+["I'll be here for about ten days.","열흘 정도 있을 거예요.","아일 비 히어 포 어바웃 텐 데이즈",""],
+["I'm staying at a hotel near the city center.","시내 중심가 근처 호텔에 묵어요.","아임 스테잉 앳 어 호텔 니어 더 씨티 센터",""],
+["Here's my hotel confirmation.","여기 호텔 예약 확인서예요.","히어즈 마이 호텔 칸퍼메이션",""],
+["I'm visiting a friend who lives here.","여기 사는 친구를 만나러 왔어요.","아임 비지팅 어 프렌드 후 리브즈 히어",""],
+["This is my first visit to the country.","이 나라는 처음 방문이에요.","디스 이즈 마이 퍼스트 비짓 투 더 컨트리",""],
+["I'm flying back on the 15th.","15일에 돌아가요.","아임 플라잉 백 온 더 피프틴쓰","날짜는 서수로 읽어요: the fifteenth."],
+["I'm traveling with my family.","가족과 함께 여행 중이에요.","아임 트래블링 위드 마이 패밀리",""],
+["I have about a thousand dollars in cash.","현금은 천 달러 정도 있어요.","아이 해브 어바웃 어 싸우전드 달러즈 인 캐쉬",""],
+["I don't have anything to declare.","신고할 물건은 없어요.","아이 돈트 해브 에니띵 투 디클레어","declare = (세관에) 신고하다"],
+["These are gifts for my friends.","이건 친구들 줄 선물이에요.","디즈 아 기프츠 포 마이 프렌즈",""],
+["It's just personal stuff.","그냥 개인 물품이에요.","잇츠 저스트 퍼스널 스터프",""],
+["Could you speak a little more slowly?","조금만 천천히 말씀해 주시겠어요?","쿠쥬 스픽 어 리를 모어 슬로울리?",""],
+["I'm sorry, I didn't catch that.","죄송해요, 잘 못 알아들었어요.","아임 쏘리, 아이 디든트 캐취 댓","catch = 알아듣다"],
+["Which line should I be in?","어느 줄에 서야 하나요?","위치 라인 슈다이 비 인?",""],
+["Do I need to fill out an arrival card?","입국 신고서를 써야 하나요?","두 아이 니드 투 필 아웃 언 어라이벌 카드?",""],
+["Where can I exchange currency?","어디서 환전할 수 있나요?","웨어 캔 아이 익스체인쥐 커런씨?",""],
+["What's the exchange rate today?","오늘 환율이 어떻게 돼요?","왓츠 디 익스체인쥐 레잇 투데이?",""],
+["Where can I buy a SIM card?","유심은 어디서 살 수 있어요?","웨어 캔 아이 바이 어 씸 카드?","요즘은 eSIM [이씸]도 많이 써요."]]},
+{c:"d",ko:"감정 표현",en:"Feelings",p:[
+["I'm really looking forward to it.","정말 기대돼.","아임 리얼리 루킹 포워드 투 잇","to 뒤에 동사를 쓸 땐 -ing: looking forward to seeing you"],
+["I'm a bit anxious about the interview.","면접 때문에 좀 불안해.","아임 어 빗 앵셔스 어바웃 디 인터뷰",""],
+["I'm completely worn out.","완전히 지쳤어.","아임 컴플릿리 원 아웃",""],
+["I'm so relieved to hear that.","그 말 들으니 정말 안심된다.","아임 쏘 릴리브드 투 히어 댓",""],
+["I'm kind of bummed about it.","그거 때문에 좀 속상해.","아임 카인더 범드 어바웃 잇","bummed = 실망한 (구어)"],
+["I'm sick and tired of waiting.","기다리는 거 진짜 지긋지긋해.","아임 씩 앤 타이어드 오브 웨이팅",""],
+["That really got on my nerves.","그거 진짜 신경 거슬렸어.","댓 리얼리 갓 온 마이 너브즈",""],
+["I'm on cloud nine!","날아갈 것 같아!","아임 온 클라우드 나인!",""],
+["I'm feeling a little under the weather.","컨디션이 좀 안 좋아.","아임 필링 어 리를 언더 더 웨더","가볍게 아플 때 쓰는 표현이에요."],
+["I'm torn between the two.","둘 사이에서 고민돼.","아임 톤 비트윈 더 투","torn = 마음이 갈라진"],
+["I was so embarrassed.","너무 창피했어.","아이 워즈 쏘 임배러스드",""],
+["I'm really grateful for your help.","도와줘서 정말 고마워.","아임 리얼리 그레잇풀 포 유어 헬프",""],
+["It's been weighing on my mind.","그게 계속 마음에 걸려.","잇츠 빈 웨잉 온 마이 마인드",""],
+["I can't stop thinking about it.","그 생각이 계속 나.","아이 캔트 스탑 띵킹 어바웃 잇",""],
+["I'm not in the mood for that right now.","지금은 그럴 기분 아니야.","아임 낫 인 더 무드 포 댓 롸잇 나우",""],
+["That's a huge weight off my shoulders.","어깨가 한결 가벼워졌어.","댓츠 어 휴쥐 웨잇 오프 마이 숄더즈",""],
+["I'm so proud of you.","네가 정말 자랑스러워.","아임 쏘 프라우드 오브 유",""],
+["I didn't mean to upset you.","속상하게 하려던 건 아니었어.","아이 디든트 민 투 업셋 유",""],
+["I feel much better now.","이제 훨씬 나아졌어.","아이 필 머취 베러 나우",""],
+["Honestly, I'm a little overwhelmed.","솔직히 좀 벅차.","아너슬리, 아임 어 리를 오버웰름드","할 일이 한꺼번에 몰렸을 때 딱 맞는 말."]]},
+{c:"t",ko:"호텔에서",en:"At the Hotel",p:[
+["I have a reservation under the name Kim.","김이라는 이름으로 예약했어요.","아이 해브 어 레저베이션 언더 더 네임 킴","under + 이름 = ~ 이름으로"],
+["Is early check-in possible?","얼리 체크인 가능한가요?","이즈 얼리 체킨 파서블?",""],
+["Could I get a room on a higher floor?","높은 층 방으로 받을 수 있을까요?","쿠다이 겟 어 룸 온 어 하이어 플로어?",""],
+["Could I have a room with a view?","전망 좋은 방으로 주실 수 있나요?","쿠다이 해브 어 룸 위드 어 뷰?",""],
+["What time is breakfast served?","조식은 몇 시에 나와요?","왓 타임 이즈 브렉퍼스트 써브드?",""],
+["Is breakfast included in the rate?","요금에 조식 포함인가요?","이즈 브렉퍼스트 인클루디드 인 더 레잇?",""],
+["Could I get a late checkout?","레이트 체크아웃 가능할까요?","쿠다이 겟 어 레잇 체카웃?",""],
+["The air conditioning doesn't seem to be working.","에어컨이 안 되는 것 같아요.","디 에어 컨디셔닝 더즌트 씸 투 비 워킹","doesn't seem to로 부드럽게 문제를 말해요."],
+["There's no hot water in the shower.","샤워기에 뜨거운 물이 안 나와요.","데어즈 노 핫 워러 인 더 샤워",""],
+["Could you send someone up to take a look?","누구 좀 올려 보내서 봐 주실 수 있나요?","쿠쥬 쎈드 썸원 업 투 테이커 룩?",""],
+["I locked myself out of my room.","키를 두고 나와서 방에 못 들어가요.","아이 락트 마이셀프 아웃 오브 마이 룸",""],
+["Could I get some extra towels and pillows?","수건이랑 베개 좀 더 받을 수 있을까요?","쿠다이 겟 썸 엑스트라 타월즈 앤 필로우즈?",""],
+["Could you hold my bags until this evening?","저녁까지 짐 좀 맡아 주실 수 있나요?","쿠쥬 홀드 마이 백즈 언틸 디스 이브닝?",""],
+["Is there a gym or a pool in the hotel?","호텔에 헬스장이나 수영장 있나요?","이즈 데어 어 쥠 오어 어 풀 인 더 호텔?",""],
+["Could I get a wake-up call at six?","6시에 모닝콜 해 주실 수 있나요?","쿠다이 겟 어 웨이컵 콜 앳 씩스?","모닝콜은 콩글리시, wake-up call이 맞아요."],
+["The room is a bit noisy. Could I change rooms?","방이 좀 시끄러운데 바꿀 수 있을까요?","더 룸 이즈 어 빗 노이지. 쿠다이 체인쥐 룸즈?",""],
+["Could you recommend a good restaurant nearby?","근처에 괜찮은 식당 추천해 주시겠어요?","쿠쥬 레커멘드 어 굿 레스토랑 니어바이?",""],
+["I'd like to extend my stay by one night.","하룻밤 더 연장하고 싶어요.","아이드 라익 투 익스텐드 마이 스테이 바이 원 나잇",""],
+["There's a charge on my bill I don't recognize.","계산서에 모르는 요금이 있어요.","데어즈 어 차쥐 온 마이 빌 아이 돈트 레커그나이즈",""],
+["Could you call me a taxi to the airport?","공항 가는 택시 좀 불러 주시겠어요?","쿠쥬 콜 미 어 택씨 투 디 에어포트?",""]]},
+{c:"d",ko:"약속 잡기",en:"Making Plans",p:[
+["Are you free sometime this week?","이번 주 중에 시간 있어?","아 유 프리 썸타임 디스 윅?",""],
+["Do you want to grab a coffee after work?","퇴근하고 커피 한잔할래?","두 유 워너 그랩 어 커피 애프터 웍?","grab = 가볍게 먹다·마시다"],
+["What day works best for you?","무슨 요일이 제일 좋아?","왓 데이 웍스 베스트 포 유?","work = (일정이) 맞다"],
+["How does Thursday evening sound?","목요일 저녁 어때?","하우 더즈 떠즈데이 이브닝 싸운드?",""],
+["I'm free any time after three.","3시 이후엔 언제든 괜찮아.","아임 프리 에니 타임 애프터 쓰리",""],
+["Let me check my calendar and get back to you.","일정 확인하고 다시 연락할게.","렛 미 첵 마이 캘린더 앤 겟 백 투 유","get back to = 다시 연락하다"],
+["That works for me.","난 그거 좋아.","댓 웍스 포 미",""],
+["Should I make a reservation?","예약할까?","슈다이 메이커 레저베이션?",""],
+["Where do you want to meet?","어디서 만날까?","웨어 두 유 원 투 밋?",""],
+["Let's meet in front of the station.","역 앞에서 만나자.","렛츠 밋 인 프런트 오브 더 스테이션",""],
+["Can we push it back to next week?","다음 주로 미룰 수 있을까?","캔 위 푸쉬 잇 백 투 넥스트 윅?","push back = 미루다"],
+["Could we move it up an hour?","한 시간 앞당길 수 있을까?","쿠드 위 무브 잇 업 언 아워?","move up = 앞당기다"],
+["Something came up at work.","회사에 일이 좀 생겼어.","썸띵 케임 업 앳 웍",""],
+["I'm so sorry, but I have to cancel.","정말 미안한데 취소해야 할 것 같아.","아임 쏘 쏘리, 벗 아이 해브 투 캔슬",""],
+["Can I take a rain check?","다음으로 미뤄도 될까?","캔 아이 테이커 레인 첵?","정중하게 다음을 기약하는 표현이에요."],
+["I'll text you when I'm on my way.","출발할 때 문자할게.","아일 텍스트 유 웬 아임 온 마이 웨이",""],
+["I might be a few minutes late.","몇 분 늦을 수도 있어.","아이 마잇 비 어 퓨 미닛츠 레잇",""],
+["Let's play it by ear.","상황 봐서 하자.","렛츠 플레이 잇 바이 이어","계획 없이 그때그때 정하자는 뜻."],
+["It's a date!","그럼 약속한 거다!","잇츠 어 데잇!","연인이 아니어도 '약속 확정'의 의미로 써요."],
+["Looking forward to it!","기대할게!","루킹 포워드 투 잇!",""]]},
+{c:"t",ko:"길 찾기와 교통",en:"Getting Around",p:[
+["Could you tell me how to get to the museum?","박물관 가는 길 좀 알려 주시겠어요?","쿠쥬 텔 미 하우 투 겟 투 더 뮤지엄?",""],
+["Is it within walking distance?","걸어갈 만한 거리인가요?","이즈 잇 위딘 워킹 디스턴스?",""],
+["How long does it take on foot?","걸어서 얼마나 걸려요?","하우 롱 더즈 잇 테익 온 풋?",""],
+["Which line should I take to get downtown?","시내 가려면 몇 호선 타야 해요?","위치 라인 슈다이 테익 투 겟 다운타운?",""],
+["Do I need to transfer?","갈아타야 하나요?","두 아이 니드 투 트랜스퍼?",""],
+["Which stop should I get off at?","어느 정류장에서 내려야 해요?","위치 스탑 슈다이 겟 오프 앳?","타다는 get on."],
+["Does this train stop at Central Station?","이 열차 중앙역에 서나요?","더즈 디스 트레인 스탑 앳 센트럴 스테이션?",""],
+["How often does the bus come?","버스가 얼마나 자주 와요?","하우 오픈 더즈 더 버스 컴?",""],
+["Where can I buy a day pass?","1일권은 어디서 사요?","웨어 캔 아이 바이 어 데이 패스?",""],
+["A round-trip ticket to Oxford, please.","옥스퍼드 왕복표 한 장 주세요.","어 라운드트립 티킷 투 악스퍼드, 플리즈","편도는 one-way. 영국에선 왕복을 return이라고도 해요."],
+["Could you take me to this address?","이 주소로 가 주시겠어요?","쿠쥬 테익 미 투 디스 애드레스?",""],
+["About how much would it be to the airport?","공항까지 대략 얼마 나와요?","어바웃 하우 머취 우딧 비 투 디 에어포트?",""],
+["Could you drop me off at the next corner?","다음 모퉁이에서 내려 주시겠어요?","쿠쥬 드랍 미 오프 앳 더 넥스트 코너?","drop off = (차에서) 내려 주다"],
+["Could you pull over here?","여기 세워 주시겠어요?","쿠쥬 풀 오버 히어?",""],
+["I think I'm lost. Could you help me?","길을 잃은 것 같아요. 도와주실 수 있나요?","아이 띵크 아임 로스트. 쿠쥬 헬프 미?",""],
+["Is it on this side of the street?","길 이쪽 편에 있나요?","이즈 잇 온 디스 싸이드 오브 더 스트릿?",""],
+["Go straight and turn left at the lights.","쭉 가다가 신호등에서 왼쪽으로 도세요.","고 스트레잇 앤 턴 레프트 앳 더 라잇츠","길 안내를 알아듣는 연습용 문장이에요."],
+["It's right around the corner.","모퉁이 돌면 바로 있어요.","잇츠 롸잇 어라운드 더 코너",""],
+["Is there a pharmacy near here?","근처에 약국 있나요?","이즈 데어 어 파머씨 니어 히어?",""],
+["I'd like to rent a car for three days.","3일간 차를 빌리고 싶어요.","아이드 라익 투 렌트 어 카 포 쓰리 데이즈",""]]},
+{c:"d",ko:"부탁하기",en:"Asking for Favors",p:[
+["Could you do me a quick favor?","간단한 부탁 하나 해도 될까?","쿠쥬 두 미 어 퀵 페이버?",""],
+["Do you have a minute?","잠깐 시간 돼?","두 유 해브 어 미닛?",""],
+["Would you mind taking a picture of us?","저희 사진 좀 찍어 주실 수 있을까요?","우쥬 마인드 테이킹 어 픽쳐 오브 어스?","여행 필수 문장! mind 뒤에는 -ing."],
+["Could you keep an eye on my bag for a second?","잠깐 제 가방 좀 봐 주시겠어요?","쿠쥬 킵 언 아이 온 마이 백 포 어 쎄컨드?","keep an eye on = 지켜보다"],
+["Would it be possible to get this done by Friday?","금요일까지 이거 끝낼 수 있을까요?","우딧 비 파서블 투 겟 디스 던 바이 프라이데이?",""],
+["I hate to ask, but could you lend me some cash?","이런 부탁 하기 싫은데, 현금 좀 빌려줄 수 있어?","아이 헤잇 투 애스크, 벗 쿠쥬 렌드 미 썸 캐쉬?","I hate to ask = 미안한 부탁 앞의 쿠션어"],
+["Could you give me a hand with these boxes?","이 상자들 옮기는 것 좀 도와줄래?","쿠쥬 기브 미 어 핸드 위드 디즈 박시즈?",""],
+["Could you walk me through it?","하나하나 설명해 줄 수 있어?","쿠쥬 웍 미 쓰루 잇?","walk through = 단계별로 안내하다"],
+["Would you mind if I opened the window?","창문 좀 열어도 될까요?","우쥬 마인드 이프 아이 오픈드 더 윈도우?",""],
+["Could you cover for me tomorrow?","내일 나 대신 좀 맡아 줄 수 있어?","쿠쥬 커버 포 미 투마로우?","cover for = 대신 일을 맡아 주다"],
+["Would you be able to pick me up?","나 좀 데리러 와 줄 수 있어?","우쥬 비 에이블 투 픽 미 업?",""],
+["Can I ask you something?","뭐 하나 물어봐도 돼?","캔 아이 애스큐 썸띵?",""],
+["Sorry to bother you, but…","번거롭게 해서 죄송한데요…","쏘리 투 바더 유, 벗…",""],
+["I'd really appreciate it if you could help.","도와주시면 정말 감사하겠어요.","아이드 리얼리 어프리시에잇 잇 이프 유 쿳 헬프",""],
+["No worries, happy to help.","걱정 마, 기꺼이 도와줄게.","노 워리즈, 해피 투 헬프",""],
+["I'm afraid I can't this time.","이번엔 어려울 것 같아.","아임 어프레이드 아이 캔트 디스 타임","I'm afraid로 시작하면 정중한 거절이 돼요."],
+["Thanks, I owe you one.","고마워, 신세 졌다.","땡스, 아이 오우 유 원",""],
+["You're a lifesaver!","네 덕분에 살았다!","유어 어 라이프쎄이버!",""],
+["Let me know if there's anything I can do.","내가 할 수 있는 게 있으면 말해 줘.","렛 미 노우 이프 데어즈 에니띵 아이 캔 두",""],
+["Don't mention it.","별말씀을요.","돈트 멘션 잇","고맙다는 말에 대한 겸손한 대답."]]},
+{c:"t",ko:"레스토랑",en:"At a Restaurant",p:[
+["Do you have a table for two?","두 명 자리 있나요?","두 유 해브 어 테이블 포 투?",""],
+["I have a reservation at seven under Kim.","7시에 김으로 예약했어요.","아이 해브 어 레저베이션 앳 쎄븐 언더 킴",""],
+["How long is the wait?","얼마나 기다려야 해요?","하우 롱 이즈 더 웨잇?",""],
+["Could we sit by the window?","창가 쪽에 앉을 수 있을까요?","쿠드 위 씻 바이 더 윈도우?",""],
+["What's popular here?","여기 인기 메뉴가 뭐예요?","왓츠 파퓰러 히어?",""],
+["What would you recommend?","뭘 추천하시겠어요?","왓 우쥬 레커멘드?",""],
+["Does this come with a side?","이거 사이드 메뉴도 같이 나와요?","더즈 디스 컴 위드 어 싸이드?",""],
+["I'm allergic to peanuts.","땅콩 알레르기가 있어요.","아임 얼러쥑 투 피넛츠","알레르기 발음은 [앨러쥐]예요."],
+["Could I get the dressing on the side?","드레싱은 따로 주실 수 있나요?","쿠다이 겟 더 드레싱 온 더 싸이드?","on the side = 따로 곁들여서"],
+["I'd like my steak medium-rare.","스테이크는 미디엄 레어로 해 주세요.","아이드 라익 마이 스테익 미디엄 레어",""],
+["Could we have a few more minutes?","조금만 더 시간 주시겠어요?","쿠드 위 해브 어 퓨 모어 미닛츠?","아직 메뉴를 못 골랐을 때."],
+["Excuse me, we're ready to order.","저기요, 주문할게요.","익스큐즈 미, 위어 레디 투 오더",""],
+["I think I'll go with the pasta.","파스타로 할게요.","아이 띵크 아일 고 위드 더 파스타","go with = ~로 정하다"],
+["This isn't quite what I ordered.","이건 제가 주문한 거랑 좀 달라요.","디스 이즌트 콰잇 왓 아이 오더드",""],
+["Could I get a box for the leftovers?","남은 음식 담아 갈 용기 주실 수 있나요?","쿠다이 겟 어 박스 포 더 레프트오버즈?",""],
+["Could we get the check, please?","계산서 주시겠어요?","쿠드 위 겟 더 첵, 플리즈?","영국에서는 the bill."],
+["Can we pay separately?","따로 계산할 수 있나요?","캔 위 페이 쎄퍼럿리?",""],
+["Is the tip included?","팁 포함인가요?","이즈 더 팁 인클루디드?",""],
+["It's on me tonight.","오늘은 내가 살게.","잇츠 온 미 투나잇",""],
+["Everything was amazing, thank you.","다 정말 훌륭했어요, 감사합니다.","에브리띵 워즈 어메이징, 땡큐",""]]},
+{c:"d",ko:"맞장구와 칭찬",en:"Reactions",p:[
+["No way, are you serious?","말도 안 돼, 진심이야?","노 웨이, 아 유 씨리어스?",""],
+["That's incredible!","믿을 수가 없다!","댓츠 인크레더블!",""],
+["You totally nailed it!","완전 제대로 해냈네!","유 토털리 네일드 잇!","nail = 못을 정확히 박다 → 딱 해내다"],
+["I know, right?","그러니까 말이야!","아이 노우, 롸잇?",""],
+["Good for you!","잘됐다!","굿 포 유!",""],
+["I'm so happy for you.","네 일이라 정말 기뻐.","아임 쏘 해피 포 유",""],
+["That makes total sense.","완전 이해돼.","댓 메익스 토털 쎈스",""],
+["Tell me about it.","내 말이 그 말이야.","텔 미 어바웃 잇","'말해 봐'가 아니라 공감의 표현이에요."],
+["You can say that again.","두말하면 잔소리지.","유 캔 쎄이 댓 어겐",""],
+["I couldn't agree more.","전적으로 동의해.","아이 쿠든트 어그리 모어",""],
+["Fair enough.","그럴 만하네.","페어 이너프","상대 말에 수긍할 때 짧게."],
+["That's a good point.","좋은 지적이야.","댓츠 어 굿 포인트",""],
+["I see where you're coming from.","무슨 말인지 알겠어.","아이 씨 웨어 유어 커밍 프롬","상대의 입장을 이해한다는 뜻."],
+["Oh, that's a shame.","아, 안타깝다.","오, 댓츠 어 쉐임",""],
+["That must have been tough.","정말 힘들었겠다.","댓 머스트 해브 빈 터프",""],
+["That looks great on you.","그거 진짜 잘 어울린다.","댓 룩스 그레잇 온 유",""],
+["You've got great taste.","안목이 좋네.","유브 갓 그레잇 테이스트",""],
+["I'm impressed!","대단한데!","아임 임프레스트!",""],
+["Way to go!","잘했어!","웨이 투 고!",""],
+["Keep up the good work.","지금처럼만 계속해.","킵 업 더 굿 웍",""]]},
+{c:"t",ko:"쇼핑",en:"Shopping",p:[
+["I'm just browsing, thanks.","그냥 구경 중이에요, 감사해요.","아임 저스트 브라우징, 땡스",""],
+["Do you have this in a medium?","이거 미디엄 사이즈 있나요?","두 유 해브 디스 인 어 미디엄?",""],
+["Does this come in other colors?","이거 다른 색상도 나와요?","더즈 디스 컴 인 아더 컬러즈?",""],
+["Could I try this on?","이거 입어 봐도 될까요?","쿠다이 트라이 디스 온?",""],
+["It's a little tight around the shoulders.","어깨 쪽이 좀 껴요.","잇츠 어 리를 타잇 어라운드 더 숄더즈","헐렁하면 loose."],
+["Do you have anything a bit more casual?","조금 더 캐주얼한 거 있나요?","두 유 해브 에니띵 어 빗 모어 캐쥬얼?",""],
+["I'm looking for a gift for my mom.","엄마 선물을 찾고 있어요.","아임 루킹 포 어 기프트 포 마이 맘",""],
+["Is this on sale?","이거 세일 중인가요?","이즈 디스 온 쎄일?","for sale은 '판매 중', on sale은 '할인 중'."],
+["Is there a discount if I buy two?","두 개 사면 할인되나요?","이즈 데어 어 디스카운트 이프 아이 바이 투?",""],
+["That's a bit out of my budget.","제 예산을 좀 넘네요.","댓츠 어 빗 아웃 오브 마이 버쥣",""],
+["I'll think about it.","좀 생각해 볼게요.","아일 띵크 어바웃 잇","사지 않고 정중하게 나올 때."],
+["I'll take it.","이걸로 살게요.","아일 테익 잇",""],
+["Can I pay by card?","카드로 결제해도 돼요?","캔 아이 페이 바이 카드?",""],
+["Could you gift-wrap it for me?","선물 포장해 주실 수 있나요?","쿠쥬 기프트 랩 잇 포 미?",""],
+["Am I eligible for a tax refund?","택스 리펀 대상인가요?","앰 아이 엘리쥐블 포 어 택스 리펀드?","eligible = 자격이 되는"],
+["Could I get a separate bag for this?","이건 봉투 따로 주실 수 있나요?","쿠다이 겟 어 쎄퍼럿 백 포 디스?",""],
+["What's your return policy?","반품 규정이 어떻게 돼요?","왓츠 유어 리턴 팔러씨?",""],
+["I'd like to exchange this for a different size.","다른 사이즈로 교환하고 싶어요.","아이드 라익 투 익스체인쥐 디스 포 어 디퍼런트 싸이즈",""],
+["I'd like to return this. Here's the receipt.","이거 반품하고 싶어요. 여기 영수증이요.","아이드 라익 투 리턴 디스. 히어즈 더 리씻",""],
+["Could you ship it to Korea?","한국으로 배송해 주실 수 있나요?","쿠쥬 쉽 잇 투 커리아?",""]]},
+{c:"d",ko:"전화와 메시지",en:"Phone & Texting",p:[
+["Hi, this is Mina. Is Jake available?","안녕하세요, 미나인데요. 제이크 있나요?","하이, 디스 이즈 미나. 이즈 제익 어베일러블?","전화에선 I'm 대신 This is로 이름을 말해요."],
+["Sorry, I missed your call.","전화 못 받아서 미안해.","쏘리, 아이 미스트 유어 콜",""],
+["Can I call you back in five minutes?","5분 후에 다시 전화해도 될까?","캔 아이 콜 유 백 인 파이브 미닛츠?",""],
+["You're breaking up. I can't hear you.","소리가 끊겨. 잘 안 들려.","유어 브레이킹 업. 아이 캔트 히어 유",""],
+["Could you speak up a little?","조금 크게 말씀해 주시겠어요?","쿠쥬 스픽 업 어 리를?",""],
+["Hold on, let me grab a pen.","잠깐만, 펜 좀 가져올게.","홀드 온, 렛 미 그랩 어 펜",""],
+["Could you spell that for me?","철자 좀 불러 주시겠어요?","쿠쥬 스펠 댓 포 미?",""],
+["Can I leave a message?","메시지 남겨도 될까요?","캔 아이 리브 어 메씨쥐?",""],
+["Could you ask him to call me back?","그분께 저한테 전화 달라고 전해 주시겠어요?","쿠쥬 애스크 힘 투 콜 미 백?",""],
+["I think you have the wrong number.","번호 잘못 거신 것 같아요.","아이 띵크 유 해브 더 롱 넘버",""],
+["I'll put you on speaker.","스피커폰으로 돌릴게.","아일 풋 유 온 스피커",""],
+["My phone's about to die.","폰 배터리가 곧 꺼져.","마이 폰즈 어바웃 투 다이",""],
+["Sorry, I'm in a meeting. Can I text you?","미안, 회의 중이야. 문자해도 돼?","쏘리, 아임 인 어 미팅. 캔 아이 텍스트 유?",""],
+["Just checking in to see how you're doing.","잘 지내나 해서 연락해 봤어.","저스트 체킹 인 투 씨 하우 유어 두잉","check in = 안부를 확인하다"],
+["Did you get my message?","내 메시지 받았어?","디쥬 겟 마이 메씨쥐?",""],
+["Sorry for the late reply.","답장 늦어서 미안해.","쏘리 포 더 레잇 리플라이",""],
+["I'm running about ten minutes late.","나 10분쯤 늦어.","아임 러닝 어바웃 텐 미닛츠 레잇",""],
+["Let me know when you get there.","도착하면 알려 줘.","렛 미 노우 웬 유 겟 데어",""],
+["I'll send you the details later.","자세한 건 나중에 보내 줄게.","아일 쎈드 유 더 디테일즈 레이러",""],
+["Talk to you soon!","곧 또 얘기하자!","톡 투 유 쑨!",""]]}
+];
+
+const CHEERS=[
+["Small steps every day add up to big results.","매일의 작은 걸음이 큰 결과를 만들어요."],
+["You don't have to be perfect to be amazing.","완벽하지 않아도 충분히 멋져요."],
+["Every expression you learn opens a new door.","표현 하나가 새로운 문을 열어 줘요."],
+["Mistakes are proof that you're trying.","실수는 도전하고 있다는 증거예요."],
+["Today is a great day to learn something new.","오늘은 새로운 걸 배우기 딱 좋은 날이에요."],
+["Progress, not perfection.","완벽보다 성장이 중요해요."],
+["Your future self will thank you for today.","미래의 내가 오늘의 나에게 고마워할 거예요."],
+["Speak up. Your voice deserves to be heard.","소리 내 말해 봐요. 당신의 목소리는 들을 가치가 있어요."],
+["One phrase at a time, one day at a time.","한 번에 한 문장, 하루에 하루씩."],
+["Confidence comes from practice, not luck.","자신감은 운이 아니라 연습에서 와요."],
+["The world is waiting to hear your story.","세상이 당신의 이야기를 기다리고 있어요."],
+["Keep going. You're doing better than you think.","계속 가요. 생각보다 훨씬 잘하고 있어요."],
+["A little practice today, a big smile tomorrow.","오늘의 작은 연습이 내일의 큰 미소가 돼요."],
+["Learning a language is collecting keys to the world.","언어를 배우는 건 세상의 열쇠를 모으는 일이에요."],
+["Be brave enough to be a beginner.","초보자가 될 용기를 가져요."],
+["Your effort today is your ticket to tomorrow.","오늘의 노력이 내일로 가는 티켓이에요."],
+["Every day you practice, you get a little closer.","연습하는 하루하루, 목표에 조금씩 가까워져요."],
+["It's okay to go slow, as long as you don't stop.","멈추지만 않는다면 천천히 가도 괜찮아요."],
+["Your English journey starts with a single sentence.","영어 여행은 한 문장에서 시작돼요."],
+["Shine bright today!","오늘도 반짝반짝 빛나요!"],
+["You're stronger and smarter than yesterday.","어제보다 더 단단하고 똑똑해졌어요."],
+["Great things take time. Keep at it.","멋진 일에는 시간이 걸려요. 꾸준히 해 봐요."],
+["Dream big, study smart, speak boldly.","크게 꿈꾸고, 똑똑하게 공부하고, 당당하게 말해요."],
+["Consistency is your superpower.","꾸준함이 당신의 초능력이에요."],
+["Every word you learn is a win.","배우는 단어 하나하나가 모두 승리예요."],
+["Today's practice is tomorrow's confidence.","오늘의 연습이 내일의 자신감이에요."],
+["You've got this!","넌 할 수 있어!"],
+["Mistakes today, fluency tomorrow.","오늘의 실수가 내일의 유창함이 돼요."],
+["Stay curious. Stay hungry for more.","호기심을 잃지 말고, 더 배우고 싶은 마음을 간직해요."],
+["The best time to start is right now.","시작하기 가장 좋은 때는 바로 지금이에요."],
+["So proud of you for showing up today.","오늘도 와 준 당신이 정말 자랑스러워요."]
+];
+const N=20, QN=10;
+const $=id=>document.getElementById(id);
+const DAY=86400000, pad=n=>String(n).padStart(2,"0");
+const keyOf=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const dayNum=d=>Math.floor(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/DAY);
+const today=new Date(); today.setHours(0,0,0,0);
+let offset=0, hide=false, tab="learn";
+const SK="dailypass-v2";
+const load=()=>{try{return JSON.parse(localStorage.getItem(SK)||"{}")}catch(e){return {}}};
+const save=v=>{try{localStorage.setItem(SK,JSON.stringify(v))}catch(e){}};
+let learned=load();
+const curDate=()=>new Date(today.getTime()+offset*DAY);
+const topicFor=d=>T[((dayNum(d)%T.length)+T.length)%T.length];
+const isDone=k=>(learned[k]||[]).length>=N;
+const stopSVG='<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>';
+const playSVG='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg>';
+const slowSVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
+const speakerSVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>';
+
+function stats(){
+  $("stamps").textContent=Object.keys(learned).filter(isDone).length;
+  let s=0,d=new Date(today);
+  if(!isDone(keyOf(d))) d=new Date(d.getTime()-DAY);
+  while(isDone(keyOf(d))){s++;d=new Date(d.getTime()-DAY)}
+  $("streak").textContent=s;
+}
+const esc=s=>s.replace(/"/g,"&quot;");
+function render(){
+  const d=curDate(),k=keyOf(d),t=topicFor(d),got=learned[k]||[];
+  $("kind").textContent=t.c==="t"?"Travel · 여행":"Everyday · 일상";
+  $("dayLabel").textContent=offset===0?"오늘의 주제":offset===-1?"어제의 주제":offset===1?"내일의 주제":`${d.getMonth()+1}월 ${d.getDate()}일의 주제`;
+  const ch=CHEERS[((dayNum(d)%CHEERS.length)+CHEERS.length)%CHEERS.length];
+  $("cheerEn").textContent=ch[0]; $("cheerKo").textContent=ch[1];
+  $("topicKo").textContent=t.ko; $("topicEn").textContent=t.en;
+  $("mon").textContent=d.toLocaleString("en-US",{month:"short"});
+  $("dd").textContent=pad(d.getDate());
+  $("wd").textContent=["일","월","화","수","목","금","토"][d.getDay()]+"요일";
+  $("next").disabled=offset>=1;
+  $("goToday").style.visibility=offset===0?"hidden":"visible";
+  $("list").innerHTML=t.p.map((p,i)=>`
+   <article class="card ${got.includes(i)?"done":""}">
+    <div class="row"><span class="num">${i+1}</span>
+     <div style="min-width:0;flex:1">
+      <p class="phrase" lang="en">${p[0]}</p>
+      <div class="pron">${p[2]}</div>
+      <div class="mean ${hide?"hidden":""}"><span>${p[1]}</span></div>
+      ${p[3]?`<div class="tip">${p[3]}</div>`:""}
+     </div></div>
+    <div class="acts">
+     <button class="btn play" data-say="${i}" data-rate="0.95" data-label="듣기">${speakerSVG}듣기</button>
+     <button class="btn" data-say="${i}" data-rate="0.6" data-label="천천히">${slowSVG}천천히</button>
+     <button class="btn got" data-got="${i}" aria-pressed="${got.includes(i)}">${got.includes(i)?"외웠어요 ✓":"외웠어요"}</button>
+    </div></article>`).join("");
+  progress();
+  if(tab==="quiz") startQuiz();
+}
+function progress(){
+  const k=keyOf(curDate()),got=learned[k]||[];
+  $("segs").innerHTML=Array.from({length:N},(_,i)=>`<i class="${got.includes(i)?"on":""}"></i>`).join("");
+  $("pcount").textContent=`${got.length} / ${N} 표현 완료`;
+  $("seal").classList.toggle("show",got.length>=N);
+  $("countText").textContent=`외운 표현 ${got.length} / ${N}`;
+  $("banner").classList.toggle("show",got.length>=N);
+  stats();
+}
+
+let voice=null; const synth=window.speechSynthesis;
+function pickVoice(){if(!synth)return;const v=synth.getVoices().filter(v=>/^en[-_]/i.test(v.lang));
+  voice=v.find(x=>/en[-_]US/i.test(x.lang)&&/Samantha|Google|Natural|Aria|Jenny|Ava/i.test(x.name))||v.find(x=>/en[-_]US/i.test(x.lang))||v[0]||null}
+if(synth){pickVoice();synth.onvoiceschanged=pickVoice}else $("warn").style.display="block";
+let gen=0, playingAll=false;
+function resetUI(){
+  document.querySelectorAll(".btn.speaking").forEach(b=>{b.classList.remove("speaking");b.innerHTML=(b.dataset.label==="듣기"?speakerSVG:slowSVG)+b.dataset.label});
+  document.querySelectorAll(".card.current").forEach(c=>c.classList.remove("current"));
+  playingAll=false; setPlayAll();
+}
+function stopAll(){gen++; if(synth) synth.cancel(); resetUI();}
+function speak(text,rate,onDone){
+  if(!synth){onDone&&onDone();return}
+  const g=gen, u=new SpeechSynthesisUtterance(text);
+  u.lang="en-US"; u.rate=rate; if(voice) u.voice=voice;
+  u.onend=u.onerror=()=>{ if(g===gen&&onDone) onDone(); };
+  setTimeout(()=>{ if(g===gen) synth.speak(u); },60);
+}
+function say(text,rate=.95){stopAll();speak(text,rate)}
+function setPlayAll(){
+  const b=$("playAll"); if(!b) return;
+  b.classList.toggle("on",playingAll); b.setAttribute("aria-pressed",playingAll);
+  b.innerHTML=playingAll?stopSVG+"정지":playSVG+"전체 듣기";
+}
+function playAll(){
+  if(playingAll){stopAll();return}
+  stopAll(); playingAll=true; setPlayAll();
+  const t=topicFor(curDate()), g=gen, cards=[...document.querySelectorAll("#list .card")];
+  let i=0;
+  const next=()=>{
+    if(g!==gen) return;
+    cards.forEach(c=>c.classList.remove("current"));
+    if(i>=t.p.length){resetUI();return}
+    const c=cards[i]; c.classList.add("current");
+    c.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"center"});
+    speak(t.p[i][0],.9,()=>setTimeout(()=>{ if(g===gen){i++;next()} },900));
+  };
+  next();
+}
+$("playAll").onclick=playAll;
+$("cheerSay").innerHTML=speakerSVG;
+$("cheerSay").onclick=()=>say($("cheerEn").textContent,.9);
+setPlayAll();
+
+$("list").addEventListener("click",e=>{
+  const t=topicFor(curDate()),k=keyOf(curDate());
+  const s=e.target.closest("[data-say]");
+  if(s){
+    if(s.classList.contains("speaking")){stopAll();return}
+    stopAll();
+    s.classList.add("speaking"); s.innerHTML=stopSVG+"정지";
+    speak(t.p[+s.dataset.say][0],+s.dataset.rate,()=>resetUI());
+    return}
+  const g=e.target.closest("[data-got]");
+  if(g){const i=+g.dataset.got,arr=learned[k]||[],was=isDone(k);
+    learned[k]=arr.includes(i)?arr.filter(x=>x!==i):[...arr,i];
+    const on=learned[k].includes(i);
+    if(!learned[k].length)delete learned[k];
+    save(learned);
+    g.setAttribute("aria-pressed",on); g.textContent=on?"외웠어요 ✓":"외웠어요";
+    g.closest(".card").classList.toggle("done",on);
+    progress();
+    if(!was&&isDone(k)){const sl=$("seal");sl.classList.remove("press");void sl.offsetWidth;sl.classList.add("press");window.scrollTo({top:0,behavior:"smooth"})}
+    return}
+  const m=e.target.closest(".mean.hidden"); if(m)m.classList.remove("hidden");
+});
+$("hideToggle").onclick=()=>{hide=!hide;$("hideToggle").setAttribute("aria-pressed",hide);document.querySelectorAll("#list .mean").forEach(m=>m.classList.toggle("hidden",hide))};
+$("prev").onclick=()=>{stopAll();offset--;render()};
+$("next").onclick=()=>{stopAll();offset++;render()};
+$("goToday").onclick=()=>{stopAll();offset=0;render()};
+
+/* guide */
+const GK="dailypass-guide-seen";
+function openGuide(){stopAll();$("guide").classList.add("open");$("closeGuide").focus()}
+function closeGuide(){$("guide").classList.remove("open");try{localStorage.setItem(GK,"1")}catch(e){}}
+$("openGuide").onclick=openGuide;
+$("closeGuide").onclick=closeGuide;
+$("startBtn").onclick=closeGuide;
+$("guide").addEventListener("click",e=>{if(e.target.id==="guide")closeGuide()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("guide").classList.contains("open"))closeGuide()});
+
+/* reward popup */
+const EMO=["🎉","🥳","🌟","💯","👏","😍","✨","🙌","💖","🏆","😎","🍀"];
+const PRAISE=["정답!","완벽해요!","Great job!","멋져요!","Perfect!","최고예요!","Nice!","천재인데요?"];
+let rewardTimer=null;
+function reward(combo){
+  const r=$("reward"), e=EMO[Math.floor(Math.random()*EMO.length)];
+  $("remo").textContent=e;
+  $("rtxt").textContent=combo>=3?`${combo}연속 정답! 🔥`:PRAISE[Math.floor(Math.random()*PRAISE.length)];
+  r.querySelectorAll(".spark").forEach(x=>x.remove());
+  const small=["✨","⭐","💛","🎊","💫","🌟"];
+  for(let i=0;i<8;i++){
+    const sp=document.createElement("span"); sp.className="spark";
+    const a=(Math.PI*2/8)*i, d=90+Math.random()*40;
+    sp.style.setProperty("--x",Math.cos(a)*d+"px"); sp.style.setProperty("--y",Math.sin(a)*d+"px");
+    sp.textContent=small[i%small.length]; r.appendChild(sp);
+  }
+  clearTimeout(rewardTimer);
+  r.classList.remove("pop"); void r.offsetWidth; r.classList.add("pop");
+  rewardTimer=setTimeout(()=>{r.classList.remove("pop");r.querySelectorAll(".spark").forEach(x=>x.remove())},1200);
+}
+
+let q=null;
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+function startQuiz(){const t=topicFor(curDate());q={t,order:shuffle(t.p.map((_,i)=>i)).slice(0,QN),n:0,score:0,wrong:[],combo:0};drawQ()}
+function drawQ(){
+  const box=$("quiz"),{t,order,n}=q;
+  if(n>=QN){
+    const msg=q.score===QN?"만점입니다. 오늘의 표현이 완전히 내 것이 되었어요.":q.score>=7?"훌륭해요. 틀린 표현만 한 번 더 소리 내 읽어 보세요.":"표현 익히기로 돌아가 듣고 따라 말한 뒤 다시 도전해 보세요.";
+    const review=q.wrong.length?`<div style="text-align:left;margin:0 0 16px">${q.wrong.map(i=>`<div class="tip" style="margin-top:8px"><span class="en" style="font-size:1.15rem;font-weight:600;color:var(--ink)">${t.p[i][0]}</span><br>${t.p[i][1]}</div>`).join("")}</div>`:"";
+    box.innerHTML=`<div class="quiz result"><div class="big">${q.score}<span style="font-size:1.6rem;color:var(--soft)"> / ${QN}</span></div><p>${msg}</p>${review}<button class="qnext" id="retry">새 문제로 다시 풀기</button></div>`;
+    $("retry").onclick=startQuiz;return}
+  const ans=order[n];
+  const opts=shuffle([ans,...shuffle(t.p.map((_,i)=>i).filter(i=>i!==ans)).slice(0,3)]);
+  box.innerHTML=`<div class="quiz">
+   <div class="qhead"><span>문제 ${n+1} / ${QN}</span><span>정답 ${q.score}</span></div>
+   <div class="qbar"><b style="width:${n/QN*100}%"></b></div>
+   <div class="qask">이 뜻에 맞는 영어 표현을 고르세요</div>
+   <div class="qmean">${t.p[ans][1]}</div>
+   <div class="opts">${opts.map(i=>`<button class="opt" lang="en" data-o="${i}">${t.p[i][0]}</button>`).join("")}</div>
+   <button class="qnext" id="qnext" hidden>${n===QN-1?"결과 보기":"다음 문제"}</button></div>`;
+  let done=false;
+  box.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+    if(done)return;done=true;const pick=+b.dataset.o;
+    if(pick===ans){q.score++;q.combo++;reward(q.combo)}else{q.wrong.push(ans);q.combo=0}
+    box.querySelectorAll(".opt").forEach(x=>{x.disabled=true;if(+x.dataset.o===ans)x.classList.add("right")});
+    if(pick!==ans)b.classList.add("wrong");
+    say(t.p[ans][0]);$("qnext").hidden=false;$("qnext").focus()});
+  $("qnext").onclick=()=>{q.n++;drawQ()};
+}
+function setTab(x){stopAll();tab=x;$("tabLearn").setAttribute("aria-selected",x==="learn");$("tabQuiz").setAttribute("aria-selected",x==="quiz");
+  $("learn").hidden=x!=="learn";$("quiz").hidden=x!=="quiz";if(x==="quiz")startQuiz()}
+$("tabLearn").onclick=()=>setTab("learn");$("tabQuiz").onclick=()=>setTab("quiz");
+render();
+try{if(!localStorage.getItem(GK)) openGuide()}catch(e){}
+</script>
+</body>
+</html>
